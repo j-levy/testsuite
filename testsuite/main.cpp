@@ -2,6 +2,9 @@
 #include <string>
 #include <fstream>
 
+#include "Test_command.h"
+#include "instruction_classify.h"
+
 int main(int argc, char **argv)
 {
     std::cout << "Hello world!" << std::endl;
@@ -14,13 +17,25 @@ int main(int argc, char **argv)
     {
         file = "test01";
     }
+
     std::ifstream testfile;
     testfile.open(file.c_str());
     // équivalent à std::ifstream testfile(string);
+    if (!testfile)
+    {
+        // something went wrong
+        std::cout << "Something went wrong. File does not exist, or is locked.\n" << std::endl;
+        return 1;
+    }
 
-    std::string line;
-    std::getline(testfile, line);
-    std::cout << line << std::endl;
+    int line_counter = 0;
+    Test_command instruction(line_counter);
+
+    while(!testfile.eof())
+    {
+        treat_line(testfile, instruction);
+    }
+
 
     testfile.close();
 

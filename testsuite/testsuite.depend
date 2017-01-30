@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1485808705 source:/home/jonathan/Documents/testsuite/testsuite/main.cpp
+	"main.h"
+	"Test_command.h"
+	"instruction_classify.h"
+
+1485766630 source:/home/jonathan/Documents/testsuite/testsuite/src/Test_command.cpp
+	<iostream>
+	"Test_command.h"
+
+1485809953 /home/jonathan/Documents/testsuite/testsuite/include/Test_command.h
+	<iostream>
+	<string>
+	<fstream>
+
+1485808508 source:/home/jonathan/Documents/testsuite/testsuite/instructions_classify.cpp
+	"main.h"
+	"Test_command.h"
+	"instruction_classify.h"
+
+1485809953 /home/jonathan/Documents/testsuite/testsuite/instruction_classify.h
+	<iostream>
+	<string>
+	<fstream>
+
+1485809882 /home/jonathan/Documents/testsuite/testsuite/main.h
+	<iostream>
+	<string>
+	<fstream>
+
