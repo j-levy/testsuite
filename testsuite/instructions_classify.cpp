@@ -8,11 +8,14 @@ void treat_line(std::ifstream &testfile, Test_command &instruction)
     std::string read_line = "";
     char command_type = 0;
 
+    // get first character into the char command_type
     testfile.get(command_type);
     std::cout << "Command char : " << command_type << " applied to : " << std::endl;
+    // get the rest of the line
     std::getline(testfile, read_line);
     std::cout << read_line << std::endl;
 
+    // redirection following the first character
     switch(command_type)
     {
         case '#':

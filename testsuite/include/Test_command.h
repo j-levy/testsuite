@@ -6,12 +6,11 @@
 #include <fstream>
 
 
-
 class Test_command
 {
     public:
         //ctors
-        Test_command(int current_line);
+        Test_command();
         ~Test_command();
 
         //setters
@@ -21,11 +20,12 @@ class Test_command
 
         //no getters as it is not required.
 
-        // action-takers
+        // action-takers : maybe some time ?
 
     protected:
 
     private:
+        // strings that are extracts from the test file.
         std::string command;
         std::string provided_input;
         std::string expected_output;

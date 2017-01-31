@@ -1,7 +1,8 @@
 #include "Test_command.h"
 
-Test_command::Test_command(int current_line)
+Test_command::Test_command()
 {
+    // initializing attributes.
     provided_input = "";
     expected_output = "";
     command = "";
@@ -9,7 +10,7 @@ Test_command::Test_command(int current_line)
 
 Test_command::~Test_command()
 {
-    //dtor
+    //destructor : nothing to do in particular (no free needed)
 }
 
 void Test_command::set_command(std::string var)
