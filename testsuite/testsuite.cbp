@@ -34,12 +34,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="include/Test_command.h" />
+		<Unit filename="Test_command.cpp" />
+		<Unit filename="Test_command.h" />
+		<Unit filename="instruction_classify.cpp" />
 		<Unit filename="instruction_classify.h" />
-		<Unit filename="instructions_classify.cpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
-		<Unit filename="src/Test_command.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
