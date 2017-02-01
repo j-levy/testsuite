@@ -50,7 +50,7 @@ int main(int argc, char **argv)
         treat_line(testfile, instruction);
     }
 
-    // remember to close the file.
+    // close the file.
     testfile.close();
 
 
