@@ -1,6 +1,9 @@
 # ceci est le premier fichier de test "fichier_de_test_01"
 
 > Hello World !
+< coucou
+< ajoute moi
+< ajoute moi aussi
 $ echo Hello World ! \
 2eme \
 3eme
