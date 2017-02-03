@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h> // just to test for the printf
 
-#define BUFFERSIZE 12
+#define BUFFERSIZE 120
 
 
 
@@ -58,6 +58,9 @@ void Test_command::set_expected_output(std::string var)
 
 void Test_command::execute_test()
 {
+    /*
+    This method is for the moment a dummy method to test the piping between two processes.
+    */
     std::cout << "Execution started." << std::endl;
     int father_to_son[2]; // two pipes : Father is Writer, Son is Reader
     int son_to_father[2]; // two pipes : Father is Reader, Son is Writer
@@ -88,59 +91,48 @@ void Test_command::execute_test()
     {
         close(son_to_father[0]); // son doesn't need to read what he sends to father
         close(father_to_son[1]); // son doesn't need to write where his father writes
-        /*
+
+        /* // redirecting the file descriptor. This is for the future.
         dup(fd[1]);
         dup2(fd[1],1); // duplicates file description "writer" onto "stdout"
         */
-        std::string chaine_lambda = "Son to father : TOTO AIME LES BATEAUX";
-        write(father_to_son[1], chaine_lambda.c_str(), sizeof(chaine_lambda));
 
-        // LET'S READ !
-        char buffer[BUFFERSIZE];
-        memset(buffer, 0, sizeof(char) * (BUFFERSIZE ));
-        int num_read = 1;
-        while(num_read != 0)
-        {
-            num_read = read(father_to_son[0], &buffer, BUFFERSIZE - 1);
-            buffer[num_read] = '\0';
-            printf("%s", buffer);
-        }
+        std::string reading = "";
 
-        return;
+        char got = 0;
+        while (read(father_to_son[0], &got, 1))
+            reading.push_back(got);
+
+        int res = 1;
+        std::cout << reading << " read."<< std::endl << std::flush;
+
+        write(son_to_father[1], reading.c_str(), reading.length());
+        /// Something went wrong while writing, because the next line doesn't show.
+        /// Plus, the father program cannot read. The write might has gone wrong.
+        /// Even when removing the "read" in the father program, the following line never show, but the program finishes.
+
+        std::cout << reading << " written with result "<< res << std::endl << std::flush;
+
     }
     else
     {  // father talking
         close(son_to_father[1]); // father doesn't need to write where his son writes
         close(father_to_son[0]); // father doesn't need to read what he sends to his son
-        /*
-        // Part where we waited. No need to wait, as the read will block until the pipe contains things.
-
-        int *son_status = NULL;
-        pid_t son_pid = wait(son_status); // will return the PID of son.
-        printf("Son of PID %d has returned.\n", son_pid);
-
-        // part where you can read the file descriptor
-        */
 
         std::string chaine_lambda = "Father to son : PAT PAT PAT";
-        write(father_to_son[1], chaine_lambda.c_str(), sizeof(chaine_lambda));
+        write(father_to_son[1], chaine_lambda.c_str(), chaine_lambda.length());
 
-        // LET'S READ !
-        char buffer[BUFFERSIZE];
-        memset(buffer, 0, sizeof(char) * (BUFFERSIZE ));
-        int num_read = 1;
-        while(num_read != 0)
-        {
-            num_read = read(son_to_father[0], &buffer, BUFFERSIZE - 1);
-            buffer[num_read] = '\0';
-            printf("%s", buffer);
-        }
+        /// displays :
+        std::cout << "Father, PID " << getpid() << " reads : " << std::endl << std::flush;
 
-        return;
+        char got = 0;
 
+        /// When coming to the next "read", the program halts
+        /// I noticed that the program halts to the "read" (doesn't enter in the while loop)
+        /// Is the pipe empty ? Has something emptied the pipe ?
 
+        while (read(son_to_father[0], &got, 1))
+            std::cout << got;
     }
-
-
 
 }

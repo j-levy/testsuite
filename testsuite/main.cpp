@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
 
     /// NOT READY YET
-    ///instruction.execute_test();
+    instruction.execute_test();
     // close the file.
     testfile.close();
 
