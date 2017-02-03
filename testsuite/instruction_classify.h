@@ -5,8 +5,8 @@
 #include <string>
 #include <fstream>
 
-
-void treat_line(std::ifstream &testfile, Test_command &instruction);
+std::string getline_fromfile(std::istream &testfile, std::string read_line);
+void treat_line(char command_type, std::string read_line, Test_command &instruction);
 
 
 #endif // INSTRUCTION_CLASSIFY_H_INCLUDED

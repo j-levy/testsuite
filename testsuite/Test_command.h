@@ -13,6 +13,9 @@ class Test_command
         Test_command();
         ~Test_command();
 
+        //printer
+        void print();
+
         //setters
         void set_command(std::string var);
         void set_provided_input(std::string var);
@@ -20,7 +23,9 @@ class Test_command
 
         //no getters as it is not required.
 
-        // action-takers : maybe some time ?
+        // action-takers
+        void execute_test();
+
 
     protected:
 

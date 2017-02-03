@@ -1,10 +1,12 @@
-   # ceci est le premier fichier de test "fichier_de_test_01"
-   > HELLO WORLD
+# ceci est le premier fichier de test "fichier_de_test_01"
 
-$ echo HELLO WORLD \
-    get me \
-    if you \
-    can !
-# essai de cat...
-< TOTO
-$ cat > fish
+> Hello World !
+$ echo Hello World ! \
+2eme \
+3eme
+
+# < World
+# $ cat > fichier
+
+# > World
+# $ cat fichier

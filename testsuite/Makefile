@@ -5,14 +5,13 @@
 # (No, I don't know how to go recursive. Screw you.) 
 ########################################################################### 
 
-## USELESS COMMENT
  
 CC=g++ 
 CFLAGS=-W -Wall -ansi -pedantic -g 
 LDFLAGS= 
 EXEC=testsuite 
 SRC= $(wildcard *.cpp) 
-OBJ= $(SRC:.c=.o) 
+OBJ= $(SRC:.cpp=.o)
  
 all: $(EXEC) 
  
