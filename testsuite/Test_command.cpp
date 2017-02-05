@@ -3,12 +3,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-// include for pipe, fork
-#include <unistd.h>
-#include <string.h>
-// include for exit
 #include <stdlib.h>
 #include <stdio.h> // just to test for the printf
+
+// include for pipe, fork
+#include <unistd.h>
+#include <string>
+// include for exit
+
 
 #define BUFFERSIZE 120
 
@@ -56,7 +58,7 @@ void Test_command::set_expected_output(std::string var)
     std::cout << "Added " << var << "to expected output which is now : " << expected_output << std::endl;
 }
 
-void Test_command::execute_test()
+int Test_command::execute_test()
 {
     /*
     This method is for the moment a dummy method to test the piping between two processes.
@@ -68,7 +70,9 @@ void Test_command::execute_test()
 
     // THE FOLLOWING CODE IS INSPIRED FROM LINUX'S PROGRAMMER MANUAL :  "man 2 pipe" :D
     // AND FROM THE EXERCICE ABOUT "POPEN"
-    if (pipe(father_to_son) == -1 || pipe(son_to_father))
+    int res_pipe1 = pipe(father_to_son) ;
+    int res_pipe2 = pipe(son_to_father) ;
+    if (res_pipe1 == -1 || res_pipe2 == -1)
     {
        perror("pipe");
        exit(EXIT_FAILURE);
@@ -87,52 +91,54 @@ void Test_command::execute_test()
         to_father[1] fd for FATHER to WRITE
     */
 
-    if (cpid == 0) // son talking
+    if (cpid != 0) // son talking
     {
         close(son_to_father[0]); // son doesn't need to read what he sends to father
         close(father_to_son[1]); // son doesn't need to write where his father writes
 
-        /* // redirecting the file descriptor. This is for the future.
-        dup(fd[1]);
-        dup2(fd[1],1); // duplicates file description "writer" onto "stdout"
+        /*
+        I'm a hooligan : since the process "son" doesn't need to get anything from standard input cin and send anything to standard output cout...
+        I use cin and cout as file descriptors and I put the pipes in place of them. Screw you, C++ !
         */
+        dup(son_to_father[1]);
+        dup2(son_to_father[1],1); // duplicates file description "writer" onto "cout"
+        dup(father_to_son[0]);
+        dup2(father_to_son[0], 0); // duplicates file descriptor "reader" onto "cin"
+
 
         std::string reading = "";
+        std::cin >> std::noskipws; // allows cin to start with spaces
 
-        char got = 0;
-        while (read(father_to_son[0], &got, 1))
-            reading.push_back(got);
+        int c = 1;
+        while (c != 0) // 0 AKA '\0' Bwahahaha (<= mad scientist)
+        {
+            c = std::cin.get();
+            reading.push_back(c); // append character into the "reading" string. Also adds the '\0' for the future.
+        }
+        // using cerr to display messages, as cout writes into the pipe !
+        std::cerr << "Son has read : " << reading << std::endl;
 
-        int res = 1;
-        std::cout << reading << " read."<< std::endl << std::flush;
-
-        write(son_to_father[1], reading.c_str(), reading.length());
-        /// Something went wrong while writing, because the next line doesn't show.
-        /// Plus, the father program cannot read. The write might has gone wrong.
-        /// Even when removing the "read" in the father program, the following line never show, but the program finishes.
-
-        std::cout << reading << " written with result "<< res << std::endl << std::flush;
-
+        // writing to father using... cout !
+        std::cout << reading << " written" << std::endl;
+        exit(0);
     }
     else
     {  // father talking
         close(son_to_father[1]); // father doesn't need to write where his son writes
         close(father_to_son[0]); // father doesn't need to read what he sends to his son
 
-        std::string chaine_lambda = "Father to son : PAT PAT PAT";
-        write(father_to_son[1], chaine_lambda.c_str(), chaine_lambda.length());
-
-        /// displays :
-        std::cout << "Father, PID " << getpid() << " reads : " << std::endl << std::flush;
+        std::string chaine_lambda = "   PAT \nPAT2 \n   PAT 3";
+        chaine_lambda.push_back('\0');
+        // OK ALORS LA METHODE .c_str() NE RAJOUTE PAS LE '\0' TOUT SEUL FAUT LE METTRE A LA MAIN OKLM
+        write(father_to_son[1], chaine_lambda.c_str(),chaine_lambda.length());
 
         char got = 0;
 
-        /// When coming to the next "read", the program halts
-        /// I noticed that the program halts to the "read" (doesn't enter in the while loop)
-        /// Is the pipe empty ? Has something emptied the pipe ?
-
+        std::cout << "father reading : ";
         while (read(son_to_father[0], &got, 1))
             std::cout << got;
+
+        return 0;
     }
 
 }

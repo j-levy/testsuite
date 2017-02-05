@@ -24,7 +24,7 @@ class Test_command
         //no getters as it is not required.
 
         // action-takers
-        void execute_test();
+        int execute_test();
 
 
     protected:

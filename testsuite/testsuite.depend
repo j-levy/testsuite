@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1486160434 source:/home/jonathan/Documents/testsuite/testsuite/main.cpp
+1486164255 source:/home/jonathan/Documents/testsuite/testsuite/main.cpp
 	<iostream>
 	<string>
 	<fstream>
@@ -34,17 +34,17 @@
 	"Test_command.h"
 	"instruction_classify.h"
 
-1486052463 /home/jonathan/Documents/testsuite/testsuite/Test_command.h
+1486319882 /home/jonathan/Documents/testsuite/testsuite/Test_command.h
 	<iostream>
 	<string>
 	<fstream>
 
-1486163498 source:/home/jonathan/Documents/testsuite/testsuite/Test_command.cpp
+1486329863 source:/home/jonathan/Documents/testsuite/testsuite/Test_command.cpp
 	"Test_command.h"
 	<sys/types.h>
 	<sys/wait.h>
-	<unistd.h>
-	<string.h>
 	<stdlib.h>
 	<stdio.h>
+	<unistd.h>
+	<string>
 
