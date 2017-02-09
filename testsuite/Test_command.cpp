@@ -42,19 +42,19 @@ void Test_command::print()
 void Test_command::set_command(std::string var)
 {
     command = var;
-    std::cout << "Set command to : " << command << std::endl;
+    //std::cout << "Set command to : " << command << std::endl;
 }
 
 void Test_command::set_provided_input(std::string var)
 {
     provided_input = provided_input + var + "\n"; // manually adds \n because getline() removes it.
-    std::cout << "Added " << var << "to provided input which is now : " << expected_output << std::endl;
+    //std::cout << "Added " << var << "to provided input which is now : " << expected_output << std::endl;
 }
 
 void Test_command::set_expected_output(std::string var)
 {
     expected_output = expected_output + var + "\n"; // manually adds \n because getline() removes it.
-    std::cout << "Added " << var << "to expected output which is now : " << expected_output << std::endl;
+    //std::cout << "Added " << var << "to expected output which is now : " << expected_output << std::endl;
 }
 
 int Test_command::execute_test()
@@ -105,33 +105,28 @@ int Test_command::execute_test()
         dup2(father_to_son[0], 0); // duplicates file descriptor "reader" onto "cin"
 
 
-        std::string m_command = "";
-        std::string m_args = "";
         std::cin >> std::noskipws; // allows cin to start with spaces
 
-        // GET COMMAND
-        int c = 1;
-        while (c != 0) // 0 AKA '\0'
-        {
-            c = std::cin.get();
-            if (c != 0) // we need to remove the '\0'
-                 m_command.push_back(c); // append character into the "m_command" string
-        }
+        // GET COMMAND : in object.
+
         // GET ARGUMENTS
-        c = 1;
+        // But cin will be used by the command called by execlp, right ? RIGHT ? Right.
+
+        /*
+        // old code snippet to see if son can rean. Will soon be removed.
+        int c = 1;
         while (c != 0) // 0 AKA '\0'
         {
             c = std::cin.get();
             if (c != 0) // we need to remove the '\0'
                  m_args.push_back(c); // append character into the "m_command" string
         }
-        // using cerr to display messages, as cout writes into the pipe !
-        std::cerr << "Son has read : " << m_command << std::endl;
+        */
 
         // Execution part.
         std::string shell = "sh";
         std::string shellarg = "-c";
-        std::string shellcommand = m_command + " " + m_args;
+        std::string shellcommand = command;
 
         // "execlp" is a C function, coming from a world where strings are char* terminated by '\0'. We need this last char...
         shell.push_back('\0');
@@ -149,25 +144,22 @@ int Test_command::execute_test()
         close(son_to_father[1]); // father doesn't need to write where his son writes
         close(father_to_son[0]); // father doesn't need to read what he sends to his son
 
-
-        // OK ALORS LA METHODE .c_str() NE RAJOUTE PAS LE '\0' TOUT SEUL FAUT LE METTRE A LA MAIN
-        std::string m_command = "ls";
-        m_command.push_back('\0');
-        write(father_to_son[1], m_command.c_str(),m_command.length());
-
-        std::string m_args = "-l ~";
-        m_args.push_back('\0');
-        write(father_to_son[1], m_args.c_str(),m_args.length());
+        write(father_to_son[1], provided_input.c_str(),provided_input.length());
+        std::cout << "Executing : " << command << " with input : " << provided_input << std::endl;
+        close(father_to_son[1]);
 
         char got = 0;
 
-        std::cout << "father reading : ";
         int *res = 0;
-        wait(res);
+        wait((void *) 0);
         while (read(son_to_father[0], &got, 1))
             std::cout << got;
 
+        // in the end, we should clear our little object. We'll clear it so that we can re-use it ! Ecology !
+        // Is that classy and a good manner ? I don't know. I don't use the setters because they add the chains they take as parameters.
+        command = "";
+        provided_input = "";
+        expected_output = "";
         return 0;
     }
-
 }

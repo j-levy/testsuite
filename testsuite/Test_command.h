@@ -21,7 +21,7 @@ class Test_command
         void set_provided_input(std::string var);
         void set_expected_output(std::string var);
 
-        //no getters as it is not required.
+        //we don't use getters.
 
         // action-takers
         int execute_test();

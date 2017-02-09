@@ -19,11 +19,11 @@ std::string getline_fromfile(std::istream &testfile, std::string read_line) // t
 
     if (read_line != "" && lastChar == '\\') // '\\' means the \ char. Test if string is not empty BEFORE !
     {
-        // remove backslash. No test beforehand because it's not empty to enter here.
+        // remove backslash. we already tested, read_line is not empty to enter here.
         read_line.erase (read_line.size()-1);
 
-        // append the \n in the end of the string
-        read_line.push_back('\n');
+        // Don't append the \n in the end of the string. That was a mistake I made when reading the subject.
+        //read_line.push_back('\n');
 
         return read_line + getline_fromfile(testfile, read_line);
     } else {
@@ -41,6 +41,7 @@ void treat_line(char command_type, std::string read_line, Test_command &instruct
             break;
         case '$':
             instruction.set_command(read_line);
+            instruction.execute_test();
             break;
         case '>':
             instruction.set_expected_output(read_line);

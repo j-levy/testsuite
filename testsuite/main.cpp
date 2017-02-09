@@ -69,16 +69,15 @@ int main(int argc, char **argv)
         read_line = getline_fromfile(testfile, ""); // this trick is because recursive function is recursive :D
 
         // this is debug.
-        std::cout << "Command char : " << command_type << " applied to : " << std::endl;
-        std::cout << read_line  << std::endl;
+        //std::cout << "Command char : " << command_type << " applied to : " << std::endl;
+        //std::cout << read_line  << std::endl;
 
         // here we assign the command where it should be.
         treat_line(command_type, read_line, instruction);
     }
 
 
-    /// NOT READY YET
-    instruction.execute_test();
+
     // close the file.
     testfile.close();
 
