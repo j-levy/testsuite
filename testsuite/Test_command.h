@@ -34,6 +34,7 @@ class Test_command
         std::string command;
         std::string provided_input;
         std::string expected_output;
+        std::string effective_output;
 };
 
 #endif // TEST_COMMAND_H

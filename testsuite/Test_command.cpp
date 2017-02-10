@@ -9,9 +9,8 @@
 // include for pipe, fork
 #include <unistd.h>
 #include <string>
+#include <algorithm>
 // include for exit
-
-#define BUFFERSIZE 120
 
 
 
@@ -19,6 +18,7 @@ Test_command::Test_command()
 {
     // initializing attributes.
     provided_input = "";
+    effective_output = "";
     expected_output = "";
     command = "";
 }
@@ -144,22 +144,52 @@ int Test_command::execute_test()
         close(son_to_father[1]); // father doesn't need to write where his son writes
         close(father_to_son[0]); // father doesn't need to read what he sends to his son
 
-        write(father_to_son[1], provided_input.c_str(),provided_input.length());
         std::cout << "Executing : " << command << " with input : " << provided_input << std::endl;
+        write(father_to_son[1], provided_input.c_str(),provided_input.length());
+
         close(father_to_son[1]);
 
         char got = 0;
 
-        int *res = 0;
-        wait((void *) 0);
+        int res = 0;
+
         while (read(son_to_father[0], &got, 1))
+        {
+            effective_output.push_back(got);
             std::cout << got;
+        }
+
+        wait(&res);
+        if (res != 0)
+        {
+            std::cerr<< "Processus exited with status " << res << std::endl;
+            exit(res+4);
+        }
+
+        // Compare the strings:
+        if (!expected_output.empty())
+        {
+           char chars[2] = {'\n', '\0'};
+           for (int i = 0; i < 2; i ++)
+           {
+                // you need include <algorithm> to use general algorithms like std::remove()
+                expected_output.erase (std::remove(expected_output.begin(), expected_output.end(), chars[i]), expected_output.end());
+                effective_output.erase (std::remove(effective_output.begin(), effective_output.end(), chars[i]), effective_output.end());
+           }
+           if (expected_output != effective_output)
+           {
+               std::cerr << "Ouputs differ ! " << std::endl;
+               std::cerr << "Expected : " << expected_output <<std::endl;
+               std::cerr << "Got..... : " << effective_output << std::endl;
+           }
+        }
 
         // in the end, we should clear our little object. We'll clear it so that we can re-use it ! Ecology !
         // Is that classy and a good manner ? I don't know. I don't use the setters because they add the chains they take as parameters.
         command = "";
         provided_input = "";
         expected_output = "";
+        effective_output = "";
         return 0;
     }
 }

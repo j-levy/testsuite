@@ -5,8 +5,12 @@ DANS TON FICHIER
 
 $ cat > fichier
 
+> RAJOUTE CETTE LIGNE DANS TON FICHIER plz
 $ cat fichier
 $ ls -l
+# la prochaine ligne devrait générer une erreur.
+$ cat bababeuh 
+
 # < World
 # $ cat > fichier
 
